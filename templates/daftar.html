@@ -1,0 +1,43 @@
+<link rel="stylesheet" href="/static/style.css" type="text/css">
+{% block body %}
+{% if session['logged_in'] %}
+<p>You're logged in already!</p>
+{% else %}
+ 
+ 
+<form action="/mendaftar" method="POST">
+	<div class="login">
+		<div class="login-screen">
+			<div class="app-title">
+				<h1>Daftar</h1>
+				<h5 style="color:red">{{ alert }}</h5>
+			</div>
+ 
+			<div class="login-form">
+				<div class="control-group">
+				<input type="email" required class="login-field" value="" placeholder="email" name="email">
+				<label class="login-field-icon fui-user" for="login-name"></label>
+				</div>
+				<div class="control-group">
+				<input type="text" required class="login-field" value="" placeholder="nama" name="nama">
+				<label class="login-field-icon fui-user" for="login-name"></label>
+				</div>
+ 
+				<div class="control-group">
+				<input type="password" required class="login-field" value="" placeholder="password" name="password">
+				<label class="login-field-icon fui-lock" for="login-pass"></label>
+				</div>
+ 
+                <input type="submit" value="Daftar" class="btn btn-primary btn-large btn-block" >
+			    <br>
+			    <div>
+			    	<a href="/login">Sudah punya akun? Login di sini!</a>
+			    </div>
+
+			</div>
+		</div>
+	</div>
+</form>
+ 
+{% endif %}
+{% endblock %}

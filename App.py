@@ -3,6 +3,8 @@ from flask import Flask, flash, redirect, render_template, request, session, abo
 import pymysql
 import os
 import Auth
+import PyPDF2
+from werkzeug import secure_filename
 
  
 app = Flask(__name__)
@@ -19,7 +21,7 @@ class Service():
 	def login():
 		POST_USERNAME = str(request.form['username'])
 		POST_PASSWORD = str(request.form['password'])
- 
+ 		
 		return auth.login(POST_USERNAME,POST_PASSWORD)
 	@app.route('/mendaftar',methods=['POST'])
 	def mendaftar():
@@ -32,8 +34,17 @@ class Service():
 	def logout():
 		return auth.logout()
 		
+	@app.route('/upload', methods = ['GET', 'POST'])
+	def upload_file():
+	   	if request.method == 'POST':
+	   		f = request.files['file']
+			f.save(os.path.join(session.get('username'), secure_filename(f.filename)))
+			return 'file uploaded successfully'
 
-
+	@app.route('/file/<nama_file>')
+	def readfile(nama_file):
+		return render_template('readfile.html',file=nama_file)
+		
 
 if __name__ == "__main__":
 	auth = Auth.Auth()

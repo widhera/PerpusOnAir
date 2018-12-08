@@ -3,6 +3,7 @@ from flask import Flask, flash, redirect, render_template, request, session, abo
 import pymysql
 import os
 import Auth
+# import Buku
 
  
 app = Flask(__name__)
@@ -14,6 +15,9 @@ class Service():
 		return auth.home()
 	@app.route('/daftar')
 	def daftar_form():
+		return auth.daftar_form()
+	@app.route('/UploadBuku')
+	def UploadBuku_form():
 		return auth.daftar_form()
 	@app.route('/login',methods=['POST'])
 	def login():
@@ -27,7 +31,7 @@ class Service():
 		POST_NAMA	= str(request.form['nama'])
 		POST_PASSWORD = str(request.form['password'])
  
-		return POST_PASSWORD
+		return auth.mendaftar(POST_EMAIL,POST_NAMA,POST_PASSWORD)
 	@app.route('/logout')
 	def logout():
 		return auth.logout()

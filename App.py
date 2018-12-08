@@ -1,5 +1,5 @@
 from flask import Flask
-from flask import Flask, flash, redirect, render_template, request, session, abort
+from flask import Flask, flash, redirect, render_template, request, session, abort, send_from_directory
 import pymysql
 import os
 import Auth
@@ -36,6 +36,8 @@ class Service():
 		
 	@app.route('/upload', methods = ['GET', 'POST'])
 	def upload_file():
+		if not session.get('logged_in'):
+			return render_template('login.html',alert='')
 	   	if request.method == 'POST':
 	   		f = request.files['file']
 			f.save(os.path.join(session.get('username'), secure_filename(f.filename)))
@@ -43,7 +45,13 @@ class Service():
 
 	@app.route('/file/<nama_file>')
 	def readfile(nama_file):
-		return render_template('readfile.html',file=nama_file)
+		if not session.get('logged_in'):
+			return render_template('login.html',alert='')
+		some_directory=session.get('username')
+		nama_file=nama_file+".pdf"
+		print some_directory
+		print nama_file
+		return send_from_directory(directory=some_directory,filename=nama_file,mimetype='application/pdf')
 		
 
 if __name__ == "__main__":

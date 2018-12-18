@@ -129,7 +129,11 @@ class Service():
 		data = 'static\\bookshelf'+path
 		print ("tayar"+data)
 		if os.path.exists(data):
-  			os.remove(data)
+  			
+  			if(os.path.isdir(data)):
+  				shutil.rmtree(data)
+  			else:
+  				os.remove(data)
   			query = "DELETE from buku where `id`  = '"+id_buku+"'"
 			print query
 			cursor.execute(query)

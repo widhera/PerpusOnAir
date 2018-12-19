@@ -10,7 +10,7 @@ import shutil
  
 app = Flask(__name__)
 
-db = pymysql.connect("localhost", "root", "", "perpusonair")
+db = pymysql.connect("localhost", "root", "yoza", "perpusonair")
 cursor = db.cursor()
 
 class Service():
@@ -31,17 +31,17 @@ class Service():
 	def mendaftar():
 		POST_EMAIL = str(request.form['email'])
 		POST_NAMA = str(request.form['nama'])
-		POST_PASSWORD = str(hash(request.form['password']))
+		POST_PASSWORD = str(request.form['password'])
 		print POST_PASSWORD
  		
-		query = "INSERT INTO user (`email`,`nama`,`password`,`memory`) values ('"+POST_EMAIL+"','"+POST_NAMA+"','"+POST_PASSWORD+"',1000000000)"
+		query = "INSERT INTO user (`email`,`nama`,`password`,`memory`,`root_id`) values ('"+POST_EMAIL+"','"+POST_NAMA+"','"+POST_PASSWORD+"',1000000000,0)"
 		cursor.execute(query)
 		db.commit()
 
 		id_user=str(cursor.lastrowid)
 		query = "INSERT INTO buku (`id_user`,`judul`,`path`,`ukuran`) values ("+id_user+",'/','/"+id_user+"',0)"
 		cursor.execute(query)
-		os.mkdir('static\\bookshelf\\'+id_user)
+		os.mkdir('static/bookshelf/'+id_user)
 
 		id_buku=str(cursor.lastrowid)
 		query = "UPDATE user set root_id = "+id_buku+" where id="+id_user;
@@ -61,7 +61,7 @@ class Service():
 		result = cursor.fetchall()
 
 		path_root = str(result[0][3])
-		arr = os.listdir('static\\bookshelf\\'+str(result[0][3]))
+		arr = os.listdir('static/bookshelf/'+str(result[0][3]))
 		my_list = []
 		for i in arr:
 			path_temp = str(path_root)+'/'+i
@@ -70,8 +70,8 @@ class Service():
 			cursor.execute(query)
 			result = cursor.fetchall()
 
-			path_temp = 'static\\bookshelf\\'+path_root+"\\"+str(i)
-			path_temp = path_temp.replace('/','\\')
+			path_temp = 'static/bookshelf/'+path_root+"/"+str(i)
+			path_temp = path_temp.replace('/','/')
 			
 			if(os.path.isdir(path_temp)):
 				direct='DIR'
@@ -116,8 +116,8 @@ class Service():
 		cursor.execute(query)
 		result = cursor.fetchall()
 
-		path = result[0][3].replace('/','\\')
-		data = '\\static\\bookshelf'+path
+		path = result[0][3].replace('/','/')
+		data = '/static/bookshelf'+path
 		return render_template('read.html',data=data, nama_file=result[0][2])
 
 	@app.route('/delete/<id_buku>')
@@ -130,8 +130,8 @@ class Service():
 		cursor.execute(query)
 		result = cursor.fetchall()
 
-		path = result[0][3].replace('/','\\')
-		data = 'static\\bookshelf'+path
+		path = result[0][3].replace('/','/')
+		data = 'static/bookshelf'+path
 		print ("tayar"+data)
 		if os.path.exists(data):
   			
@@ -158,8 +158,8 @@ class Service():
 		path = "/"+session.get('id')+POST_PATH+POST_NAMA_FILE
 		ukuran = "0"
 
-		data= path.replace('/','\\')
-		data = 'static\\bookshelf'+data
+		data= path.replace('/','/')
+		data = 'static/bookshelf'+data
 		if not os.path.exists(data):
   			query = "INSERT INTO buku (`id_user`,`judul`,`path`,`ukuran`) values ("+id_user+",'"+judul+"','"+path+"',"+ukuran+")"
 			print query
@@ -181,8 +181,8 @@ class Service():
 		path = "/"+session.get('id')+POST_PATH+POST_NAMA_FOLDER
 		ukuran = "0"
 
-		data= path.replace('/','\\')
-		data = 'static\\bookshelf'+data
+		data= path.replace('/','/')
+		data = 'static/bookshelf'+data
 		if not os.path.exists(data):
   			query = "INSERT INTO buku (`id_user`,`judul`,`path`,`ukuran`) values ("+id_user+",'"+judul+"','"+path+"',"+ukuran+")"
 			print query
@@ -205,11 +205,11 @@ class Service():
 		result = cursor.fetchall()
 
 		nama_file = result[0][3].rsplit('/', 1)[1]
-		path = result[0][3].replace('/','\\')
-		source_path = 'static\\bookshelf'+path
+		path = result[0][3].replace('/','/')
+		source_path = 'static/bookshelf'+path
 
-		data = POST_PATH.replace('/','\\')
-		target_path = 'static\\bookshelf\\'+session.get('id')+data
+		data = POST_PATH.replace('/','/')
+		target_path = 'static/bookshelf/'+session.get('id')+data
 
 		if os.path.exists(source_path):
 			print("tagetpath required")

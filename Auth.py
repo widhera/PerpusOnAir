@@ -4,7 +4,7 @@ from flask import Flask, flash, redirect, render_template, request, session, abo
 import pymysql
 import os
 
-db = pymysql.connect("localhost", "root", "", "perpusonair")
+db = pymysql.connect("localhost", "root", "yoza", "perpusonair")
 cursor = db.cursor()
 
 class Auth(object):
@@ -22,7 +22,7 @@ class Auth(object):
 	def login(self,email=None,password=None,mysql=None):
 		if not session.get('logged_in'):
 			self.email = email
-			self.password = hash(password)
+			self.password = password
 
 			query = "SELECT * from user where email = '"+self.email+"' and password ='"+ str(self.password)+"'"
 			print query

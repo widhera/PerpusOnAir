@@ -41,6 +41,11 @@ class Service():
 		id_user=str(cursor.lastrowid)
 		query = "INSERT INTO buku (`id_user`,`judul`,`path`,`ukuran`) values ("+id_user+",'/','/"+id_user+"',0)"
 		cursor.execute(query)
+		os.mkdir('static\\bookshelf\\'+id_user)
+
+		id_buku=str(cursor.lastrowid)
+		query = "UPDATE user set root_id = "+id_buku+" where id="+id_user;
+		cursor.execute(query)
 		db.commit()		
 		return redirect('/')
 	@app.route('/logout')
